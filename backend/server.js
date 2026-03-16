@@ -29,25 +29,29 @@ app.use('/api/students', studentRoutes);
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, '../frontend/dist');
+
   app.use(express.static(frontendPath));
 
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(frontendPath, 'index.html'));
   });
+
 } else {
   app.get('/', (req, res) => {
-    res.send('API is running...');
+    res.send('Student Management Portal API is running...');
   });
 }
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/student-portal')
   .then(async () => {
+
     console.log('Connected to MongoDB');
-    
+
     try {
       // Seed Demo Admin
       const adminExists = await Student.findOne({ email: 'admin@example.com' });
+
       if (!adminExists) {
         await Student.create({
           name: 'Demo Admin',
@@ -55,8 +59,10 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/student-por
           password: 'password123',
           role: 'admin'
         });
+
         console.log('Demo Admin seeded successfully');
       }
+
     } catch (err) {
       console.error('Failed to seed demo admin:', err);
     }
@@ -64,6 +70,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/student-por
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
+
   })
   .catch((err) => {
     console.error('MongoDB connection error:', err);
