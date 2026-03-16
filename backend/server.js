@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import courseRoutes from './routes/courses.js';
 import studentRoutes from './routes/students.js';
+import Student from './models/Student.js';
 
 dotenv.config();
 
@@ -41,8 +42,25 @@ if (process.env.NODE_ENV === 'production') {
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/student-portal')
-  .then(() => {
+  .then(async () => {
     console.log('Connected to MongoDB');
+    
+    try {
+      // Seed Demo Admin
+      const adminExists = await Student.findOne({ email: 'admin@example.com' });
+      if (!adminExists) {
+        await Student.create({
+          name: 'Demo Admin',
+          email: 'admin@example.com',
+          password: 'password123',
+          role: 'admin'
+        });
+        console.log('Demo Admin seeded successfully');
+      }
+    } catch (err) {
+      console.error('Failed to seed demo admin:', err);
+    }
+
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

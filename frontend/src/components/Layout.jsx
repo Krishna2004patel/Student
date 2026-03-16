@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { BookOpen, CustomDashboardIcon, LogOut, Menu, User, Settings, GraduationCap } from 'lucide-react';
+import { BookOpen, LayoutDashboard, LogOut, Menu, User, Settings, GraduationCap } from 'lucide-react';
 import authService from '../services/auth.service';
 
 const Layout = () => {
